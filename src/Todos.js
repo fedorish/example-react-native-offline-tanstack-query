@@ -4,7 +4,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query/build/lib';
 import { useState } from 'react';
-import { Button, Text, TextInput, View } from 'react-native';
+import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { supabase } from '../supabase';
 
 const Todos = () => {
@@ -26,12 +26,11 @@ const Todos = () => {
       queryClient.invalidateQueries(['todos']);
     },
   });
-  const { mutate } = updateTodo;
   const onTodoSubmit = () => {
-    mutate({ todo: text });
+    updateTodo.mutate({ todo: text });
   };
-
   const { data: todoData } = data || {};
+
   if (isLoading) {
     return (
       <View>
@@ -39,6 +38,7 @@ const Todos = () => {
       </View>
     );
   }
+
   return (
     <View
       style={{
@@ -48,10 +48,26 @@ const Todos = () => {
         paddingHorizontal: '10%',
       }}
     >
-      {todoData?.length &&
-        todoData.map(({ todo }, idx) => <Text key={idx}>{todo}</Text>)}
+      {!!todoData?.length ? (
+        <View>
+          <Text
+            style={{
+              fontSize: 20,
+              marginBottom: 5,
+              textDecorationLine: 'underline',
+            }}
+          >
+            My todos
+          </Text>
+          {todoData.map(({ todo }, idx) => {
+            return <Text key={idx}>{todo}</Text>;
+          })}
+        </View>
+      ) : (
+        <Text style={{ marginBottom: 10 }}>I don't have any todos</Text>
+      )}
+
       <View style={{ marginTop: 10 }}>
-        {!todoData?.length && <Text>Add todo..</Text>}
         <TextInput
           value={text}
           onChangeText={(inputText) => setText(inputText)}
@@ -64,7 +80,19 @@ const Todos = () => {
             width: '100%',
           }}
         />
-        <Button title='Add todo' onPress={onTodoSubmit} />
+        <TouchableOpacity
+          onPress={onTodoSubmit}
+          style={{
+            borderColor: 'black',
+            backgroundColor: '#64b5f6',
+            borderWidth: 1,
+            padding: 10,
+            marginTop: 10,
+            borderRadius: 7,
+          }}
+        >
+          <Text style={{ textAlign: 'center' }}>Add todo</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

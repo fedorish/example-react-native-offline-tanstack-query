@@ -1,9 +1,9 @@
+import 'react-native-url-polyfill/auto';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
 import { focusManager, QueryClient } from '@tanstack/react-query';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { StyleSheet, View } from 'react-native';
-import 'react-native-url-polyfill/auto';
 import Todos from './src/Todos';
 import { useAppState } from './src/useAppState';
 import { useOnlineManager } from './src/useOnlineManager';
@@ -43,8 +43,6 @@ export default function App() {
 
   queryClient.setMutationDefaults(['todos'], {
     mutationFn: async ({ todo }) => {
-      console.log(`Value of 'todo' is: `, todo);
-      console.log('running default');
       return supabase.from('todos').insert({ todo });
     },
   });
